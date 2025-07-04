@@ -162,7 +162,7 @@ Delete a note by ID and its image from Cloudinary (if any).
 ```env
 PORT=5000
 MONGODB_URI=your_mongodb_connection_uri
-CORS_ORIGIN=http://localhost:3000
+CORS_ORIGIN=*
 ACCESS_TOKEN_SECRET=your_access_token_secret
 ACCESS_TOKEN_EXPIRY=15m
 REFRESH_TOKEN_SECRET=your_refresh_token_secret
