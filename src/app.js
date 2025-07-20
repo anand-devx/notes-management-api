@@ -14,7 +14,19 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 app.get('/',(req,res)=>{
-    res.send('Hello');
+    res.json({
+        "register user":"/register",
+        "login user":"/login",
+        "refresh tokens":"/refresh-tokens",
+        "change password":"/change-password",
+        "update details":"/update-details",
+        "create note":"/notes/create",
+        "read all notes":"/notes/read-all",
+        "read note with title":"/notes/read-one/:title",
+        "update note with ID":"/notes/update/:noteID",
+        "":"",
+        "delete note with ID":"/notes/delete/:noteID",
+    });
 })
 
 // import 

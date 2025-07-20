@@ -50,7 +50,7 @@ router.route("/notes/create").post(verifyJWT,
         }
     ])
     ,createNote)
-router.route("/notes/read-all/").get(verifyJWT, getNotes)
+router.route("/notes/read-all").get(verifyJWT, getNotes)
 router.route("/notes/read-one/:title").get(verifyJWT, getNote)
 router.route("/notes/update/:noteID").post(verifyJWT, 
     upload.fields([
