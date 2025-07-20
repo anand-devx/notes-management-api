@@ -17,8 +17,25 @@ const createNote = asyncHandler(async(req, res) => {
     if(!title){
         throw new ApiError(400, "Title is required")
     }
-
-    const coverImageLocalPath = req.files?.coverImage?.[0]?.path
+    if(title){
+        const existedTitle = await Note.aggregate([
+            {
+                $match:{
+                    owner: user._id
+                }
+            },
+            {
+                $match:{
+                    title
+                }
+            }
+        ])
+        console.log(existedTitle);
+        if(existedTitle.length!==0){
+            throw new ApiError(400, "Title already used, please try another title")
+        }
+    }
+    const coverImageLocalPath = req.files?.coverImage?.[0]?.buffer
     let coverImage;
     if(coverImageLocalPath){
         coverImage = await uploadToCloudinary(coverImageLocalPath)
@@ -32,7 +49,7 @@ const createNote = asyncHandler(async(req, res) => {
             title,
             content,
             tags,
-            isPinned,
+            isPinned: isPinned || "false",
             about,
             coverImage: coverImage?.secure_url,
             coverImageID:coverImage?.public_id || "",

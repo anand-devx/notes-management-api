@@ -1,5 +1,6 @@
 import {v2 as cloudinary} from "cloudinary";
 import fs from "fs";
+import streamifier from 'streamifier'
 
 cloudinary.config(
     {
@@ -8,24 +9,23 @@ cloudinary.config(
         api_secret:process.env.API_SECRET
     }
 )
-const uploadToCloudinary = async function(localFilePath){ 
-    try {
-        if(!localFilePath) return null
-        const response = await cloudinary.uploader.upload(localFilePath,
-            {
-                resource_type: "auto"
-            }
-        )
-        fs.unlinkSync(localFilePath)
-        return response
-    } catch (error) {
-        fs.unlinkSync(localFilePath)
-        throw error; 
-        return null
-    }
-}
+export const uploadToCloudinary = async (fileBuffer) => {
+  return await new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { resource_type: "auto" },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve({
+          secure_url:result.secure_url, 
+          public_id:result.public_id
+        });
+      }
+    );
+    streamifier.createReadStream(fileBuffer).pipe(stream);
+  });
+};
 
-const deleteFromCloudinary = async  (public_id) => {
+export const deleteFromCloudinary = async  (public_id) => {
     try {
         const response = await cloudinary.uploader.destroy(public_id)
         return response
@@ -34,11 +34,4 @@ const deleteFromCloudinary = async  (public_id) => {
         throw error
         return null
     }
-}
-
-
-
-
-export {uploadToCloudinary,
-    deleteFromCloudinary
 }
