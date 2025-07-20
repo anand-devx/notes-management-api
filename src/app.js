@@ -24,7 +24,6 @@ app.get('/',(req,res)=>{
         "read all notes":"/notes/read-all",
         "read note with title":"/notes/read-one/:title",
         "update note with ID":"/notes/update/:noteID",
-        "":"",
         "delete note with ID":"/notes/delete/:noteID",
     });
 })
